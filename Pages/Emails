@@ -1,0 +1,122 @@
+import React, { useState } from "react";
+import { base44 } from "@/api/base44Client";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import EmailInbox from "../components/emails/EmailInbox";
+import EmailDetail from "../components/emails/EmailDetail";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Mail, Inbox, Star } from "lucide-react";
+
+export default function Emails() {
+  const queryClient = useQueryClient();
+  const [selectedEmail, setSelectedEmail] = useState(null);
+  const [activeTab, setActiveTab] = useState("all");
+
+  const { data: emails = [] } = useQuery({
+    queryKey: ['emails'],
+    queryFn: () => base44.entities.Email.list("-received_date"),
+  });
+
+  const updateEmailMutation = useMutation({
+    mutationFn: ({ id, data }) => base44.entities.Email.update(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['emails'] });
+    },
+  });
+
+  const deleteEmailMutation = useMutation({
+    mutationFn: (id) => base44.entities.Email.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['emails'] });
+      setSelectedEmail(null);
+    },
+  });
+
+  const handleSelectEmail = (email) => {
+    setSelectedEmail(email);
+    if (!email.is_read) {
+      updateEmailMutation.mutate({ id: email.id, data: { ...email, is_read: true } });
+    }
+  };
+
+  const handleToggleStar = (email) => {
+    updateEmailMutation.mutate({ 
+      id: email.id, 
+      data: { ...email, is_starred: !email.is_starred } 
+    });
+  };
+
+  const handleDelete = (email) => {
+    deleteEmailMutation.mutate(email.id);
+  };
+
+  const handleReply = async (email, replyText) => {
+    await base44.integrations.Core.SendEmail({
+      to: email.from_email,
+      subject: `Re: ${email.subject}`,
+      body: replyText,
+      from_name: "Carlson Company"
+    });
+  };
+
+  const filteredEmails = emails.filter(email => {
+    if (activeTab === "unread") return !email.is_read;
+    if (activeTab === "starred") return email.is_starred;
+    return true;
+  });
+
+  const unreadCount = emails.filter(e => !e.is_read).length;
+  const starredCount = emails.filter(e => e.is_starred).length;
+
+  return (
+    <div className="space-y-8">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent mb-2">
+            Emails
+          </h1>
+          <p className="text-slate-600">Manage your business communications.</p>
+        </div>
+      </div>
+
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <TabsList>
+          <TabsTrigger value="all" className="gap-2">
+            <Inbox className="w-4 h-4" />
+            All ({emails.length})
+          </TabsTrigger>
+          <TabsTrigger value="unread" className="gap-2">
+            <Mail className="w-4 h-4" />
+            Unread ({unreadCount})
+          </TabsTrigger>
+          <TabsTrigger value="starred" className="gap-2">
+            <Star className="w-4 h-4" />
+            Starred ({starredCount})
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value={activeTab} className="mt-6">
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+            <div className="lg:col-span-2">
+              <EmailInbox
+                emails={filteredEmails}
+                selectedEmail={selectedEmail}
+                onSelectEmail={handleSelectEmail}
+                onToggleStar={handleToggleStar}
+              />
+            </div>
+
+            <div className="lg:col-span-3">
+              <EmailDetail
+                email={selectedEmail}
+                onBack={() => setSelectedEmail(null)}
+                onDelete={handleDelete}
+                onReply={handleReply}
+                onToggleStar={handleToggleStar}
+              />
+            </div>
+          </div>
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
+}
