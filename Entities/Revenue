@@ -1,0 +1,49 @@
+{
+  "name": "Revenue",
+  "type": "object",
+  "properties": {
+    "source": {
+      "type": "string",
+      "description": "Revenue source"
+    },
+    "amount": {
+      "type": "number",
+      "description": "Revenue amount"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "product_sales",
+        "services",
+        "subscriptions",
+        "consulting",
+        "other"
+      ],
+      "description": "Revenue category"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "Revenue date"
+    },
+    "is_recurring": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this is recurring revenue"
+    },
+    "client": {
+      "type": "string",
+      "description": "Client name"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes"
+    }
+  },
+  "required": [
+    "source",
+    "amount",
+    "category",
+    "date"
+  ]
+}
