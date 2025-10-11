@@ -1,0 +1,43 @@
+{
+  "name": "YouTubeMetric",
+  "type": "object",
+  "properties": {
+    "channel_name": {
+      "type": "string",
+      "description": "YouTube channel name"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "Metric date"
+    },
+    "views": {
+      "type": "number",
+      "description": "Total views"
+    },
+    "subscribers": {
+      "type": "number",
+      "description": "Total subscribers"
+    },
+    "comments": {
+      "type": "number",
+      "description": "Total comments"
+    },
+    "likes": {
+      "type": "number",
+      "description": "Total likes"
+    },
+    "watch_time_hours": {
+      "type": "number",
+      "description": "Total watch time in hours"
+    },
+    "videos_published": {
+      "type": "number",
+      "description": "Number of videos published"
+    }
+  },
+  "required": [
+    "channel_name",
+    "date"
+  ]
+}
