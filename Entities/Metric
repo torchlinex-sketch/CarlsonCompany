@@ -1,0 +1,48 @@
+{
+  "name": "Metric",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Metric name"
+    },
+    "value": {
+      "type": "number",
+      "description": "Metric value"
+    },
+    "unit": {
+      "type": "string",
+      "description": "Unit of measurement (e.g., USD, %, count)"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "financial",
+        "operational",
+        "marketing",
+        "customer",
+        "other"
+      ],
+      "description": "Metric category"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "Metric date"
+    },
+    "target": {
+      "type": "number",
+      "description": "Target value for this metric"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional context"
+    }
+  },
+  "required": [
+    "name",
+    "value",
+    "category",
+    "date"
+  ]
+}
