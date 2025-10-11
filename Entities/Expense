@@ -1,0 +1,56 @@
+{
+  "name": "Expense",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Expense name/description"
+    },
+    "amount": {
+      "type": "number",
+      "description": "Expense amount"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "operations",
+        "marketing",
+        "software",
+        "payroll",
+        "equipment",
+        "travel",
+        "other"
+      ],
+      "description": "Expense category"
+    },
+    "is_recurring": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this is a recurring expense"
+    },
+    "frequency": {
+      "type": "string",
+      "enum": [
+        "monthly",
+        "quarterly",
+        "yearly"
+      ],
+      "description": "Recurrence frequency"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "Expense date"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes"
+    }
+  },
+  "required": [
+    "name",
+    "amount",
+    "category",
+    "date"
+  ]
+}
