@@ -1,0 +1,147 @@
+import React, { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { Plus } from "lucide-react";
+
+export default function ExpenseForm({ onSubmit, isSubmitting }) {
+  const [formData, setFormData] = useState({
+    name: "",
+    amount: "",
+    category: "operations",
+    is_recurring: false,
+    frequency: "monthly",
+    date: new Date().toISOString().split('T')[0],
+    notes: ""
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSubmit({
+      ...formData,
+      amount: parseFloat(formData.amount)
+    });
+    setFormData({
+      name: "",
+      amount: "",
+      category: "operations",
+      is_recurring: false,
+      frequency: "monthly",
+      date: new Date().toISOString().split('T')[0],
+      notes: ""
+    });
+  };
+
+  return (
+    <Card className="shadow-xl border-0">
+      <CardHeader className="border-b border-slate-100">
+        <CardTitle className="flex items-center gap-2 text-lg">
+          <Plus className="w-5 h-5" />
+          Add New Expense
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="pt-6">
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="name">Expense Name</Label>
+              <Input
+                id="name"
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                placeholder="Office supplies"
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="amount">Amount</Label>
+              <Input
+                id="amount"
+                type="number"
+                step="0.01"
+                value={formData.amount}
+                onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
+                placeholder="0.00"
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="category">Category</Label>
+              <Select value={formData.category} onValueChange={(value) => setFormData({ ...formData, category: value })}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="operations">Operations</SelectItem>
+                  <SelectItem value="marketing">Marketing</SelectItem>
+                  <SelectItem value="software">Software</SelectItem>
+                  <SelectItem value="payroll">Payroll</SelectItem>
+                  <SelectItem value="equipment">Equipment</SelectItem>
+                  <SelectItem value="travel">Travel</SelectItem>
+                  <SelectItem value="other">Other</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="date">Date</Label>
+              <Input
+                id="date"
+                type="date"
+                value={formData.date}
+                onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                required
+              />
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-lg">
+            <Switch
+              checked={formData.is_recurring}
+              onCheckedChange={(checked) => setFormData({ ...formData, is_recurring: checked })}
+            />
+            <Label className="cursor-pointer">Recurring Expense</Label>
+            
+            {formData.is_recurring && (
+              <Select value={formData.frequency} onValueChange={(value) => setFormData({ ...formData, frequency: value })}>
+                <SelectTrigger className="w-32">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="monthly">Monthly</SelectItem>
+                  <SelectItem value="quarterly">Quarterly</SelectItem>
+                  <SelectItem value="yearly">Yearly</SelectItem>
+                </SelectContent>
+              </Select>
+            )}
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="notes">Notes (Optional)</Label>
+            <Textarea
+              id="notes"
+              value={formData.notes}
+              onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+              placeholder="Additional details..."
+              rows={3}
+            />
+          </div>
+
+          <Button 
+            type="submit" 
+            className="w-full bg-blue-900 hover:bg-blue-800"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "Adding..." : "Add Expense"}
+          </Button>
+        </form>
+      </CardContent>
+    </Card>
+  );
+}
