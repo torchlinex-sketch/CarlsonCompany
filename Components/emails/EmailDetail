@@ -1,0 +1,76 @@
+import React, { useState } from "react";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { ArrowLeft, Reply, Trash2, Send, Star, StarOff } from "lucide-react";
+import { format } from "date-fns";
+
+export default function EmailDetail({ email, onBack, onDelete, onReply, onToggleStar }) {
+  const [isReplying, setIsReplying] = useState(false);
+  const [replyText, setReplyText] = useState("");
+  const [isSending, setIsSending] = useState(false);
+
+  const handleSendReply = async () => {
+    if (!replyText.trim()) return;
+    setIsSending(true);
+    await onReply(email, replyText);
+    setReplyText("");
+    setIsReplying(false);
+    setIsSending(false);
+  };
+
+  if (!email) {
+    return (
+      <Card className="shadow-xl border-0 flex items-center justify-center h-96">
+        <p className="text-slate-500">Select an email to read</p>
+      </Card>
+    );
+  }
+
+  return (
+    <Card className="shadow-xl border-0">
+      <CardHeader className="border-b border-slate-100 p-6">
+        <div className="flex items-center justify-between mb-4">
+          <Button variant="ghost" size="sm" onClick={onBack}>
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Inbox
+          </Button>
+
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => onToggleStar(email)}
+            >
+              {email.is_starred ? (
+                <Star className="w-5 h-5 text-amber-500 fill-amber-500" />
+              ) : (
+                <StarOff className="w-5 h-5 text-slate-400" />
+              )}
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setIsReplying(!isReplying)}
+            >
+              <Reply className="w-5 h-5" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => onDelete(email)}
+              className="text-red-600 hover:text-red-700"
+            >
+              <Trash2 className="w-5 h-5" />
+            </Button>
+          </div>
+        </div>
+
+        <h2 className="text-2xl font-bold text-slate-900 mb-4">{email.subject}</h2>
+
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="font-semibold text-slate-900">{email.from_name || email.from_email}</p>
+            <p className="text-sm text-slate-500">{email.from_email}</p>
+          </div>
+ 
