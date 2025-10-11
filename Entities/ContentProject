@@ -1,0 +1,54 @@
+{
+  "name": "ContentProject",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Project title"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "youtube_short",
+        "product",
+        "blog",
+        "campaign",
+        "other"
+      ],
+      "description": "Content type"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "idea",
+        "in_progress",
+        "completed",
+        "published"
+      ],
+      "default": "idea",
+      "description": "Project status"
+    },
+    "description": {
+      "type": "string",
+      "description": "Project description"
+    },
+    "content": {
+      "type": "string",
+      "description": "Generated or created content"
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Additional metadata (tags, target audience, etc.)"
+    },
+    "due_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Project due date"
+    }
+  },
+  "required": [
+    "title",
+    "type",
+    "status"
+  ]
+}
