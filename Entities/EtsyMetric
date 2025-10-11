@@ -1,47 +1,43 @@
 {
-  "name": "Notification",
+  "name": "EtsyMetric",
   "type": "object",
   "properties": {
-    "type": {
+    "shop_name": {
       "type": "string",
-      "enum": [
-        "email",
-        "finance",
-        "tool",
-        "metric",
-        "other"
-      ],
-      "description": "Notification type"
+      "description": "Etsy shop name"
     },
-    "title": {
+    "date": {
       "type": "string",
-      "description": "Notification title"
+      "format": "date",
+      "description": "Metric date"
     },
-    "message": {
-      "type": "string",
-      "description": "Notification message"
+    "views": {
+      "type": "number",
+      "description": "Total views"
     },
-    "is_read": {
-      "type": "boolean",
-      "default": false,
-      "description": "Whether notification has been read"
+    "orders": {
+      "type": "number",
+      "description": "Total orders"
     },
-    "link": {
-      "type": "string",
-      "description": "Link to related content"
+    "revenue": {
+      "type": "number",
+      "description": "Total revenue"
     },
-    "priority": {
-      "type": "string",
-      "enum": [
-        "low",
-        "medium",
-        "high"
-      ],
-      "default": "medium"
+    "favorites": {
+      "type": "number",
+      "description": "Total favorites"
+    },
+    "conversion_rate": {
+      "type": "number",
+      "description": "Conversion rate percentage"
+    },
+    "active_listings": {
+      "type": "number",
+      "description": "Number of active listings"
     }
   },
   "required": [
-    "type",
-    "title"
+    "shop_name",
+    "date"
   ]
 }
