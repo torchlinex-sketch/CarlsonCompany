@@ -1,0 +1,49 @@
+{
+  "name": "Email",
+  "type": "object",
+  "properties": {
+    "from_email": {
+      "type": "string",
+      "description": "Sender email address"
+    },
+    "from_name": {
+      "type": "string",
+      "description": "Sender name"
+    },
+    "subject": {
+      "type": "string",
+      "description": "Email subject"
+    },
+    "body": {
+      "type": "string",
+      "description": "Email body content"
+    },
+    "is_read": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether email has been read"
+    },
+    "received_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When email was received"
+    },
+    "is_starred": {
+      "type": "boolean",
+      "default": false
+    },
+    "labels": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Email labels/categories"
+    }
+  },
+  "required": [
+    "from_email",
+    "subject",
+    "body",
+    "received_date"
+  ]
+}
